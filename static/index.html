@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Вторая лаба</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.png" type="image/png">
+</head>
+
+<body>
+    <main class="main">
+        <section class="students__header">
+            <h2>Список студентов</h2>
+            <button type="button" class="button" data-action="add">Добавить студента</button>
+        </section>
+
+        <form id="filter-form" class="filter">
+            <input type="text" id="filter-fullName" placeholder="ФИО">
+            <input type="text" id="filter-group" placeholder="Группа">
+            <input type="text" id="filter-isuId" placeholder="ИСУ ID">
+            <input type="number" id="filter-dormitory" placeholder="Общежитие">
+            <input type="number" id="filter-room" placeholder="Комната">
+            <input type="date" id="filter-checkInDate" title="Срок заселения">
+            <label class="filter__label">
+                <input type="checkbox" id="filter-isForeigner">
+                Иностранец
+            </label>
+            <button type="submit">Применить</button>
+            <button type="reset">Сбросить</button>
+        </form>
+
+        <div class="table-wrapper">
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Группа</th>
+                        <th>ИСУ ID</th>
+                        <th>Общежитие</th>
+                        <th>Комната</th>
+                        <th colspan="3">Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody id="students-table-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="index.js"></script>
+</body>
+</html>

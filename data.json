@@ -1,0 +1,112 @@
+[
+  {
+    "fullName": "Морозов Пётр Петрович",
+    "group": "M1130",
+    "isuId": "103332",
+    "dormNumber": 1,
+    "room": 147,
+    "checkInDate": "2022-06-14",
+    "isForeigner": true,
+    "notes": "Староста",
+    "id": 1
+  },
+  {
+    "fullName": "Соколов Артём Сергеевич",
+    "group": "P4108",
+    "isuId": "082863",
+    "dormNumber": 6,
+    "room": 457,
+    "checkInDate": "2024-09-27",
+    "isForeigner": false,
+    "notes": "",
+    "id": 2
+  },
+  {
+    "fullName": "Васильев Андрей Сергеевич",
+    "group": "P3988",
+    "isuId": "351161",
+    "dormNumber": 15,
+    "room": 374,
+    "checkInDate": "2021-05-26",
+    "isForeigner": false,
+    "notes": "Отличник",
+    "id": 3
+  },
+  {
+    "fullName": "Кузнецов Роман Петрович",
+    "group": "P3708",
+    "isuId": "183959",
+    "dormNumber": 8,
+    "room": 495,
+    "checkInDate": "2023-03-31",
+    "isForeigner": false,
+    "notes": "",
+    "id": 4
+  },
+  {
+    "fullName": "Васильев Андрей Дмитриевич",
+    "group": "M3874",
+    "isuId": "163752",
+    "dormNumber": 3,
+    "room": 411,
+    "checkInDate": "2021-12-01",
+    "isForeigner": false,
+    "notes": "",
+    "id": 5
+  },
+  {
+    "fullName": "Фёдоров Андрей Иванович",
+    "group": "P4366",
+    "isuId": "274483",
+    "dormNumber": 2,
+    "room": 512,
+    "checkInDate": "2023-07-16",
+    "isForeigner": false,
+    "notes": "",
+    "id": 6
+  },
+  {
+    "fullName": "Лебедев Павел Андреевич",
+    "group": "P2084",
+    "isuId": "393376",
+    "dormNumber": 5,
+    "room": 226,
+    "checkInDate": "2026-04-18",
+    "isForeigner": false,
+    "notes": "Переселён из другой комнаты",
+    "id": 7
+  },
+  {
+    "fullName": "Сидоров Олег Андреевич",
+    "group": "P4095",
+    "isuId": "965653",
+    "dormNumber": 2,
+    "room": 540,
+    "checkInDate": "2021-03-25",
+    "isForeigner": true,
+    "notes": "",
+    "id": 8
+  },
+  {
+    "fullName": "Соколов Олег Сергеевич",
+    "group": "P3786",
+    "isuId": "691669",
+    "dormNumber": 4,
+    "room": 449,
+    "checkInDate": "2026-01-08",
+    "isForeigner": false,
+    "notes": "Переселён из другой комнаты",
+    "id": 9
+  },
+  {
+    "fullName": "Иванов Роман Сергеевич",
+    "group": "P3079",
+    "isuId": "513627",
+    "dormNumber": 4,
+    "room": 545,
+    "checkInDate": "2023-05-07",
+    "isForeigner": false,
+    "notes": "Староста",
+    "id": 10
+  }
+]

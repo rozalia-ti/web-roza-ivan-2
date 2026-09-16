@@ -1,0 +1,54 @@
+<section id="student-form-view">
+  <h2 id="form-title">Добавить студента</h2>
+  <div id="student-preview"></div>
+
+  <form id="student-form">
+    <input type="hidden" id="student-id">
+
+    <p>
+      <label for="fullName">ФИО студента *</label><br>
+      <input type="text" id="fullName" title="Не короче 2 символов">
+    </p>
+
+    <p>
+      <label for="group">Группа *</label><br>
+      <input type="text" id="group" title="Одна буква и 4 цифры, например P3211">
+    </p>
+
+    <p>
+      <label for="isuId">ИСУ ID *</label><br>
+      <input type="text" id="isuId" inputmode="numeric" title="6 цифр, третья цифра от 1 до 5">
+    </p>
+
+    <p>
+      <label for="dormNumber">Номер общежития *</label><br>
+      <input type="number" id="dormNumber">
+    </p>
+
+    <p>
+      <label for="room">Комната *</label><br>
+      <input type="number" id="room">
+    </p>
+
+    <p>
+      <label for="checkInDate">Срок заселения *</label><br>
+      <input type="date" id="checkInDate" title="Не ранее 2020-01-01">
+    </p>
+
+    <p>
+      <label>
+        <input type="checkbox" id="isForeigner">
+        Студент является иностранцем
+      </label>
+    </p>
+
+    <p>
+      <label for="notes">Заметки</label><br>
+      <textarea id="notes" rows="4"></textarea>
+    </p>
+
+    <p id="form-errors"></p>
+    <button type="submit">Сохранить</button>
+    <button type="button" data-action="back">Отмена</button>
+  </form>
+</section>
