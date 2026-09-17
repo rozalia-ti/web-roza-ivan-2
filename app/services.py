@@ -3,12 +3,14 @@
 
 from fastapi import HTTPException
 
-from .schemas import StudentCreate, StudentUpdate
+from .schemas import StudentCreate, StudentUpdate # импортируем схемы для создания и обновления студентов. Схемы нам нужны для того, чтобы проверять входные данные на соответствие требованиям (например, типы данных, обязательные поля и т.д.) перед тем, как мы будем их использовать в нашей бизнес-логике.
 from .storage import load_students, save_students
 
 
 # Список с фильтрами. Сравнение по вхождению (includes): "P32" найдёт P3211 и P3212.
 # isForeigner — булево, сравнивается точно. Пустые фильтры (None) пропускаются.
+# эта функция используется в routes.py для обработки GET-запроса на /api/requests с фильтрами в query-параметрах.
+# query-параметры становятся ее аргументами, которые она передает в filters словарь, затем фильтрует студентов по этим параметрам и возвращает список студентов, соответствующих фильтрам.
 def get_students(filters):
     students = load_students()
 
@@ -54,7 +56,7 @@ def create_student(student: StudentCreate):
 # не упомянутое в PATCH поле не перезаписывается. Нет студента → None.
 def update_student(student_id, student: StudentUpdate):
     students = load_students()
-
+# этот цикл ищет студента по id, если находит, проверяет уникальность isuId и обновляет поля, затем сохраняет в файл. Если не находит, возвращает None.
     for current in students:
         if current["id"] != student_id:
             continue
@@ -75,11 +77,12 @@ def update_student(student_id, student: StudentUpdate):
 # Удаление: True если студент был, False если id нет.
 def delete_student(student_id):
     students = load_students()
+    # оставить только тех, кто не равен удаляемому. 
     remaining = [student for student in students if student["id"] != student_id]
-
+    # если мы никого не удалили то такого студента и не было , возвращаем False     
     if len(remaining) == len(students):
         return False
-
+    # сохраняем оставшихся студентов в файл
     save_students(remaining)
 
     return True
