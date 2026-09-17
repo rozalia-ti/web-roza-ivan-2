@@ -1,5 +1,11 @@
 :root {
   --main-color: #434343;
+  --border-radius: 8px;
+  --cell-padding: 10px;
+  --control-padding: 5px;
+  --section-padding: 16px;
+  --section-margin: 16px;
+  --gap: 8px;
 }
 
 * {
@@ -21,23 +27,23 @@ td {
 }
 
 table {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 th,
 td {
-  padding: 10px;
+  padding: var(--cell-padding);
 }
 
 button {
   border: 1px solid var(--main-color);
-  border-radius: 8px;
-  padding: 5px;
+  border-radius: var(--border-radius);
+  padding: var(--control-padding);
 }
 
 section {
-  margin: 16px 0;
-  padding: 16px;
+  margin: var(--section-margin) 0;
+  padding: var(--section-padding);
 }
 
 .students__header {
@@ -56,15 +62,15 @@ section {
 .filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--gap);
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--section-margin);
 }
 
 .filter input {
   border: 1px solid var(--main-color);
-  border-radius: 8px;
-  padding: 5px;
+  border-radius: var(--border-radius);
+  padding: var(--control-padding);
 }
 
 .filter__label {

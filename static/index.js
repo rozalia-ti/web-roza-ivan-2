@@ -75,25 +75,27 @@ async function handleClick(event) {
 
   const action = element.dataset.action;
 
-  if (action === "add") {
-    await showForm();
-  }
+  switch (action) {
+    case "add":
+      await showForm();
+      break;
 
-  if (action === "edit") {
-    await showForm(Number(element.dataset.id));
-  }
+    case "edit":
+      await showForm(Number(element.dataset.id));
+      break;
 
-  if (action === "details") {
-    await showDetails(Number(element.dataset.id));
-  }
+    case "details":
+      await showDetails(Number(element.dataset.id));
+      break;
 
-  if (action === "delete") {
-    await removeStudent(Number(element.dataset.id));
-  }
+    case "delete":
+      await removeStudent(Number(element.dataset.id));
+      break;
 
-  if (action === "back") {
-    showList();
-    await renderStudents();
+    case "back":
+      showList();
+      await renderStudents();
+      break;
   }
 }
 
