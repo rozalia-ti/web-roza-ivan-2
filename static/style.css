@@ -1,11 +1,22 @@
 :root {
   --main-color: #434343;
+  --table--default--grey: #d9d9d9;
+  --table-text-color: #f2f2f2;
+  --table-background: url("photo_2026-09-17_12-51-53.jpg");
+  --table-button-background: rgba(255, 255, 255, 0.35);
+  --border-width: 1px;
   --border-radius: 8px;
   --cell-padding: 10px;
   --control-padding: 5px;
   --section-padding: 16px;
   --section-margin: 16px;
   --gap: 8px;
+  --gap-small: 4px;
+  --header-margin: 30px;
+  --main-width: 1100px;
+  --mobile-padding: 8px;
+  --mobile-gap: 10px;
+  --table-min-width: 760px;
 }
 
 * {
@@ -15,30 +26,53 @@
 }
 
 .main {
-  max-width: 1100px;
+  max-width: var(--main-width);
   margin: 0 auto;
 }
 
-table,
-th,
-td {
-  border: 1px solid var(--main-color);
-  border-collapse: collapse;
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--border-width) solid var(--main-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
-table {
-  border-radius: var(--border-radius);
+table:not(.students-table) {
+  background-image: var(--table-background);
+  background-size: cover;
+  background-position: center;
 }
 
 th,
 td {
   padding: var(--cell-padding);
+  border-right: var(--border-width) solid var(--table--default--grey);
+  border-bottom: var(--border-width) solid var(--table--default--grey);
+}
+
+table:not(.students-table) th,
+table:not(.students-table) td {
+  color: var(--table-text-color);
+}
+
+th:last-child,
+td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
 }
 
 button {
-  border: 1px solid var(--main-color);
+  border: var(--border-width) solid var(--main-color);
   border-radius: var(--border-radius);
   padding: var(--control-padding);
+}
+
+.students-table .button {
+  background: var(--table-button-background);
 }
 
 section {
@@ -52,7 +86,7 @@ section {
   align-items: center;
   max-width: 100%;
   padding: 0;
-  margin-bottom: 30px;
+  margin-bottom: var(--header-margin);
 }
 
 .table-wrapper {
@@ -68,7 +102,7 @@ section {
 }
 
 .filter input {
-  border: 1px solid var(--main-color);
+  border: var(--border-width) solid var(--main-color);
   border-radius: var(--border-radius);
   padding: var(--control-padding);
 }
@@ -76,25 +110,25 @@ section {
 .filter__label {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--gap-small);
 }
 
 @media (max-width: 600px) {
   .main {
-    margin: 0 8px;
+    margin: 0 var(--mobile-padding);
   }
 
   section {
-    padding: 8px;
+    padding: var(--mobile-padding);
   }
 
   .students__header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--mobile-gap);
   }
 
   .students-table {
-    min-width: 760px;
+    min-width: var(--table-min-width);
   }
 }
