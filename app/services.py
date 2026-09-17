@@ -1,6 +1,5 @@
-# Бизнес-логика приложения: фильтрация, проверка уникальности ИСУ ID, CRUD.
-# Этот слой не знает про HTTP-маршруты — он получает данные, применяет правила
-# и возвращает результат. Ошибки правил (дубликат ИСУ ID) — это HTTPException 409.
+# Бизнес-логика: фильтрация, уникальность ИСУ ID, CRUD.
+# Цепочка запроса: routes.py → services.py → storage.py. Stateless: всё состояние в data.json.
 
 from fastapi import HTTPException
 
@@ -8,11 +7,8 @@ from .schemas import StudentCreate, StudentUpdate
 from .storage import load_students, save_students
 
 
-# Возвращает студентов, отфильтрованных по переданным свойствам.
-# Сравнение по вхождению (includes), а не на точное равенство:
-# str(value) in str(поле), поэтому "P32" найдёт группы P3211 и P3212,
-# а "8" — общежития 8 и 18. Пустые фильтры (None) пропускаются.
-# isForeigner — булево значение, для него сравнение точное.
+# Список с фильтрами. Сравнение по вхождению (includes): "P32" найдёт P3211 и P3212.
+# isForeigner — булево, сравнивается точно. Пустые фильтры (None) пропускаются.
 def get_students(filters):
     students = load_students()
 
@@ -28,8 +24,7 @@ def get_students(filters):
     return students
 
 
-# Ищет студента по идентификатору.
-# Возвращает словарь студента или None, если такого id нет.
+# Студент по id или None, если не найден.
 def get_student_by_id(student_id):
     for student in load_students():
         if student["id"] == student_id:
@@ -38,12 +33,8 @@ def get_student_by_id(student_id):
     return None
 
 
-# Создаёт студента: проверяет уникальность ИСУ ID (при дубликате — 409),
-# назначает id и сохраняет в файл.
-# model_dump(mode="json") превращает модель в словарь, пригодный для JSON
-# (например, дата становится строкой "2024-09-01").
-# default=0 в max — если студентов ещё нет, максимум считается от нуля,
-# и первый студент получит id = 1.
+# Создание: дубликат ИСУ ID → 409; id = максимальный существующий + 1 (default=0 — для пустого списка).
+# model_dump(mode="json") — модель в словарь, пригодный для JSON (дата → строка).
 def create_student(student: StudentCreate):
     students = load_students()
 
@@ -59,10 +50,8 @@ def create_student(student: StudentCreate):
     return new_student
 
 
-# Частично обновляет студента по id, возвращает обновлённого или None (не найден).
-# exclude_unset=True берёт из модели только поля, реально пришедшие в запросе:
-# не упомянутые в PATCH поля не перезаписываются (иначе все стали бы None).
-# При смене isuId проверяем, что новый ID не занят другим студентом (409).
+# Частичное обновление: exclude_unset=True берёт только пришедшие в запросе поля —
+# не упомянутое в PATCH поле не перезаписывается. Нет студента → None.
 def update_student(student_id, student: StudentUpdate):
     students = load_students()
 
@@ -83,8 +72,7 @@ def update_student(student_id, student: StudentUpdate):
     return None
 
 
-# Удаляет студента по id.
-# Возвращает True, если студент был и удалён, и False, если такого id нет.
+# Удаление: True если студент был, False если id нет.
 def delete_student(student_id):
     students = load_students()
     remaining = [student for student in students if student["id"] != student_id]

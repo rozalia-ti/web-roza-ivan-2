@@ -1,5 +1,6 @@
-# Точка входа приложения: сборка FastAPI, обработка ошибок в едином формате,
-# раздача фронтенда. Запускается командой: uvicorn app.main:app
+# Точка входа: сборка FastAPI, единый формат ошибок, раздача статики.
+# Python и JS общаются только по HTTP с JSON: JS (fetch) → routes → services → storage,
+# обратно: dict → JSON → JS (response.json()). Запуск: uvicorn app.main:app
 
 from pathlib import Path
 
@@ -12,21 +13,18 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from .routes import router
 
 app = FastAPI()
-# Подключаем все маршруты из routes.py к приложению
+# Подключаем маршруты из routes.py
 app.include_router(router)
 
 
-# Все HTTP-ошибки (404, 409 и т.д.) приводятся к единому формату {"error": "текст"}.
-# Без этого FastAPI вернул бы {"detail": "текст"} — формат был бы разным для разных ошибок.
+# Все HTTP-ошибки (404, 409...) в едином виде {"error": "..."}.
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(status_code=exc.status_code, content={"error": str(exc.detail)})
 
 
-# Ошибки валидации запроса (422): например, группа не подходит под шаблон.
-# Из каждой ошибки берём только текст сообщения и склеиваем через "; ".
-# Особый случай: если JSON в теле синтаксически битый, pydantic помечает ошибку
-# типом json_* — по HTTP это 400 (плохой запрос), а не 422 (невалидные данные).
+# Ошибки валидации (422): тексты склеиваются через "; ".
+# Битый JSON в теле — это 400 (плохой запрос), а не 422.
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     messages = []
@@ -40,15 +38,12 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=422, content={"error": "; ".join(messages)})
 
 
-# Ловушка на любой непредвиденный сбой: клиент получает JSON с 500,
-# а не сырой traceback. Реальную причину видно в логах сервера.
+# Любой непредвиденный сбой — JSON с 500 вместо сырого traceback.
 @app.exception_handler(Exception)
 async def internal_exception_handler(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"error": "Внутренняя ошибка сервера"})
 
 
-# Раздача фронтенда из папки static: GET / отдаёт index.html.
-# html=True включает отдачу index.html для корневого пути.
-# Монтирование на "/" не перекрывает API: маршруты /api/...
-# зарегистрированы раньше и проверяются первыми.
+# Раздача фронтенда из static: Python отдаёт index.html/js/css как файлы, не исполняя их.
+# Маршруты /api/... зарегистрированы раньше и не перекрываются монтированием "/".
 app.mount("/", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static", html=True), name="static")

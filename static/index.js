@@ -1,23 +1,22 @@
-// Базовый адрес REST API: все запросы идут на сервер, у клиента своей логики хранения нет
+// Базовый адрес REST API. Обмен с бэкендом — только fetch:
+// GET с query-параметрами (фильтры), POST с JSON-телом, PATCH/DELETE с id в path.
+// Ответы — JSON: response.json() → объект, ошибки приходят в data.error.
 const API_URL = "/api/requests";
 
 const main = document.querySelector(".main");
-// Все прямые дети main (шапка, форма фильтров, таблица) —
-// они скрываются, когда на странице показывается форма или досье
+// Дети main: скрываются, когда показывается форма или досье
 const listElements = Array.from(main.children);
 
 document.addEventListener("DOMContentLoaded", start);
 
-// Точка входа: вешает обработчики событий и рисует таблицу после загрузки страницы
+// Точка входа: обработчики + первая отрисовка таблицы
 async function start() {
   main.addEventListener("click", handleClick);
 
   const filterForm = document.getElementById("filter-form");
-  // input срабатывает при каждом изменении полей (ввод, чекбокс, дата) —
-  // событие всплывает от поля к форме, поэтому хватает одного слушателя.
-  // Фильтр применяется сразу при вводе, без нажатия кнопки
+  // input всплывает от полей к форме — фильтр применяется сразу при вводе;
+  // submit — отправка формы по Enter
   filterForm.addEventListener("input", handleFilterChange);
-  // submit нужен для отправки формы клавишей Enter
   filterForm.addEventListener("submit", handleFilterChange);
   filterForm.addEventListener("reset", handleFilterReset);
 
@@ -28,8 +27,7 @@ async function start() {
   }
 }
 
-// Перерисовывает таблицу с текущими значениями фильтров.
-// preventDefault отменяет стандартную отправку формы (перезагрузку страницы)
+// Перерисовка таблицы с текущими фильтрами (preventDefault — без перезагрузки страницы)
 async function handleFilterChange(event) {
   event.preventDefault();
 
@@ -40,9 +38,7 @@ async function handleFilterChange(event) {
   }
 }
 
-// Сброс фильтров. preventDefault обязателен: стандартный сброс сработал бы
-// уже после обработчика, и мы бы перерисовали таблицу со старыми значениями.
-// Поэтому очищаем поля вручную через reset() и только потом перерисовываем
+// Сброс фильтров: preventDefault, потом reset() — иначе перерисовали бы старые значения
 async function handleFilterReset(event) {
   event.preventDefault();
 
@@ -56,7 +52,7 @@ async function handleFilterReset(event) {
   }
 }
 
-// Загружает студентов с учётом фильтров и рисует таблицу
+// Загружает студентов с фильтрами и рисует таблицу
 async function renderStudents() {
   const body = document.getElementById("students-table-body");
   const students = await getStudents();
@@ -84,38 +80,38 @@ async function renderStudents() {
   }
 }
 
-// Один обработчик на все кнопки страницы: какая кнопка нажата,
-// определяется по атрибуту data-action, id студента — по data-id
+// Один обработчик на все кнопки: действие — data-action, id студента — data-id
 async function handleClick(event) {
   const element = event.target.closest("button");
   if (!element) return;
 
   const action = element.dataset.action;
 
-  if (action === "add") {
-    await showForm();
-  }
+  switch (action) {
+    case "add":
+      await showForm();
+      break;
 
-  if (action === "edit") {
-    await showForm(Number(element.dataset.id));
-  }
+    case "edit":
+      await showForm(Number(element.dataset.id));
+      break;
 
-  if (action === "details") {
-    await showDetails(Number(element.dataset.id));
-  }
+    case "details":
+      await showDetails(Number(element.dataset.id));
+      break;
 
-  if (action === "delete") {
-    await removeStudent(Number(element.dataset.id));
-  }
+    case "delete":
+      await removeStudent(Number(element.dataset.id));
+      break;
 
-  if (action === "back") {
-    showList();
-    await renderStudents();
+    case "back":
+      showList();
+      await renderStudents();
+      break;
   }
 }
 
-// Показывает форму: без id — добавление, с id — редактирование
-// (тогда поля заполняются данными студента с сервера)
+// Форма: без id — добавление, с id — редактирование (поля заполняются с сервера)
 async function showForm(id) {
   const view = await loadTemplate("student-form.html");
   const form = view.querySelector("#student-form");
@@ -137,9 +133,7 @@ async function showForm(id) {
     view.querySelector("#student-preview").innerHTML = studentTableHtml(student);
   }
 
-  // Отправка формы: собираем данные полей и отправляем на сервер.
-  // Валидации на клиенте нет — все проверки делает сервер,
-  // а его сообщения об ошибках (422, 409) показываются в #form-errors
+  // Валидации на клиенте нет — проверки делает сервер, его ошибки (422/409) — в #form-errors
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -170,7 +164,7 @@ async function showForm(id) {
   });
 }
 
-// Показывает досье студента: загружает данные с сервера и шаблон
+// Досье студента
 async function showDetails(id) {
   const student = await getStudentById(id);
   if (!student) return;
@@ -181,7 +175,7 @@ async function showDetails(id) {
   details.innerHTML = studentTableHtml(student);
 }
 
-// Удаляет студента после подтверждения в диалоге
+// Удаление после подтверждения
 async function removeStudent(id) {
   const student = await getStudentById(id);
   if (!student) return;
@@ -198,10 +192,7 @@ async function removeStudent(id) {
   }
 }
 
-// GET /api/requests — список студентов с учётом фильтров.
-// Значения полей формы попадают в query-строку (например ?group=P32&dormitory=8),
-// пустые поля не отправляются — сервер считает такие фильтры отсутствующими.
-// Фильтрация на сервере идёт по вхождению (includes)
+// GET /api/requests — список с фильтрами (пустые поля не отправляются)
 async function getStudents() {
   const params = new URLSearchParams();
 
@@ -232,9 +223,7 @@ async function getStudents() {
   return data;
 }
 
-// GET /api/requests/:id — один студент.
-// 404 означает "не найден": это не ошибка для нас, возвращаем null.
-// Любой другой неуспешный код — исключение
+// GET /api/requests/:id; 404 → null, другие ошибки — исключение
 async function getStudentById(id) {
   const response = await fetch(`${API_URL}/${id}`);
 
@@ -249,8 +238,7 @@ async function getStudentById(id) {
   return data;
 }
 
-// POST /api/requests — создание студента.
-// Сервер отвечает 201 и созданным студентом либо ошибкой (422/409) в data.error
+// POST /api/requests — создание
 async function addStudent(student) {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -267,7 +255,7 @@ async function addStudent(student) {
   return data;
 }
 
-// PATCH /api/requests/:id — обновление студента
+// PATCH /api/requests/:id — обновление
 async function updateStudent(id, student) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PATCH",
@@ -284,8 +272,7 @@ async function updateStudent(id, student) {
   return data;
 }
 
-// DELETE /api/requests/:id — удаление.
-// Успешный ответ 204 приходит без тела, поэтому JSON не парсим
+// DELETE /api/requests/:id; 204 приходит без тела — JSON не парсим
 async function deleteStudent(id) {
   const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 
@@ -294,8 +281,7 @@ async function deleteStudent(id) {
   }
 }
 
-// Загружает шаблон (форма или досье), скрывает секции списка
-// и вставляет содержимое шаблона в страницу
+// Загружает шаблон, скрывает список, вставляет шаблон в страницу
 async function loadTemplate(fileName) {
   const response = await fetch(fileName);
   if (!response.ok) {
@@ -316,7 +302,7 @@ async function loadTemplate(fileName) {
   return view;
 }
 
-// Возврат к списку: убирает динамический вид и показывает скрытые секции
+// Возврат к списку
 function showList() {
   document.getElementById("dynamic-view")?.remove();
   listElements.forEach((element) => {
@@ -324,15 +310,14 @@ function showList() {
   });
 }
 
-// Экранирует HTML-спецсимволы (защита от XSS):
-// текст вставляется через textContent, а обратно достаётся уже безопасный HTML
+// Экранирование HTML (защита от XSS) через textContent
 function escapeHtml(value) {
   const element = document.createElement("div");
   element.textContent = String(value);
   return element.innerHTML;
 }
 
-// Таблица со всеми полями студента — для досье и предпросмотра в форме
+// Таблица с полями студента — для досье и предпросмотра
 function studentTableHtml(student) {
   return `
     <table>
