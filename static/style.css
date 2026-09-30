@@ -3,16 +3,29 @@
   --table--default--grey: #d9d9d9;
   --table-text-color: #f2f2f2;
   --table-background: url("photo_2026-09-17_12-51-53.jpg");
+  --table-overlay: rgba(0, 0, 0, 0.1);
   --table-button-background: rgba(255, 255, 255, 0.35);
+  --header-background: #e5e5e5;
+  --main-background: #eef2f3;
+  --font-family: "Montserrat", sans-serif;
+  --heading-font-family: var(--font-family);
+  --heading-font-weight: 700;
+  --table-font-family: var(--font-family);
+  --table-font-weight: 400;
+  --table-header-font-weight: 700;
   --border-width: 1px;
   --border-radius: 8px;
   --cell-padding: 10px;
   --control-padding: 5px;
+  --header-padding: 16px;
+  --main-padding: 16px;
   --section-padding: 16px;
   --section-margin: 16px;
+  --details-heading-gap: 15px;
+  --details-table-gap: 10px;
+  --back-icon-size: 24px;
   --gap: 8px;
   --gap-small: 4px;
-  --header-margin: 30px;
   --main-width: 1100px;
   --mobile-padding: 8px;
   --mobile-gap: 10px;
@@ -25,9 +38,48 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: var(--font-family);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+button,
+input,
+textarea {
+  font-family: var(--font-family);
+}
+
 .main {
+  width: 100%;
+  max-width: var(--main-width);
+  flex: 1;
+  margin: 0 auto;
+  padding: var(--main-padding);
+  background-color: var(--main-background);
+}
+
+.site-header {
+  background-color: var(--header-background);
+  border-bottom: var(--border-width) solid var(--main-color);
+  box-shadow: none;
+}
+
+.site-header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   max-width: var(--main-width);
   margin: 0 auto;
+  padding: var(--header-padding) var(--main-padding);
 }
 
 table {
@@ -36,10 +88,12 @@ table {
   border: var(--border-width) solid var(--main-color);
   border-radius: var(--border-radius);
   overflow: hidden;
+  font-family: var(--table-font-family);
+  font-weight: var(--table-font-weight);
 }
 
 table:not(.students-table) {
-  background-image: var(--table-background);
+  background-image: linear-gradient(var(--table-overlay), var(--table-overlay)), var(--table-background);
   background-size: cover;
   background-position: center;
 }
@@ -49,6 +103,10 @@ td {
   padding: var(--cell-padding);
   border-right: var(--border-width) solid var(--table--default--grey);
   border-bottom: var(--border-width) solid var(--table--default--grey);
+}
+
+th {
+  font-weight: var(--table-header-font-weight);
 }
 
 table:not(.students-table) th,
@@ -65,6 +123,44 @@ tr:last-child td {
   border-bottom: none;
 }
 
+#student-details-view h2 {
+  margin-bottom: var(--details-heading-gap);
+}
+
+#student-details-view #student-details {
+  margin-bottom: var(--details-table-gap);
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  margin-bottom: var(--details-heading-gap);
+}
+
+.form-header h2 {
+  margin: 0;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--main-color);
+  background: transparent;
+}
+
+.back-button svg {
+  width: var(--back-icon-size);
+  height: var(--back-icon-size);
+}
+
+.student-form__actions {
+  display: flex;
+  gap: var(--gap);
+  margin-top: var(--details-table-gap);
+}
+
 button {
   border: var(--border-width) solid var(--main-color);
   border-radius: var(--border-radius);
@@ -78,15 +174,6 @@ button {
 section {
   margin: var(--section-margin) 0;
   padding: var(--section-padding);
-}
-
-.students__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 100%;
-  padding: 0;
-  margin-bottom: var(--header-margin);
 }
 
 .table-wrapper {
@@ -115,14 +202,15 @@ section {
 
 @media (max-width: 600px) {
   .main {
-    margin: 0 var(--mobile-padding);
+    margin: 0;
+    padding: var(--mobile-padding);
   }
 
   section {
     padding: var(--mobile-padding);
   }
 
-  .students__header {
+  .site-header__inner {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--mobile-gap);

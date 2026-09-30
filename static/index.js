@@ -6,7 +6,9 @@ const listElements = Array.from(main.children);
 document.addEventListener("DOMContentLoaded", start);
 
 async function start() {
-  main.addEventListener("click", handleClick);
+  document.addEventListener("click", handleClick);
+  window.addEventListener("popstate", handleHistoryBack);
+  history.replaceState({ view: "list" }, "", window.location.pathname);
   const filterForm = document.getElementById("filter-form");
   filterForm.addEventListener("input", handleFilterChange);
   filterForm.addEventListener("submit", handleFilterChange);
@@ -93,20 +95,29 @@ async function handleClick(event) {
       break;
 
     case "back":
-      showList();
-      await renderStudents();
+      await goBackToList();
       break;
   }
 }
 
 async function showForm(id) {
-  const view = await loadTemplate("student-form.html");
+  let student;
+
+  if (id) {
+    student = await getStudentById(id);
+    if (!student) return;
+  }
+
+  history.pushState(
+    { view: "form", id: id || null },
+    "",
+    id ? `?edit=${id}` : "?add"
+  );
+
+  const view = await loadTemplate("student-form.html?v=2");
   const form = view.querySelector("#student-form");
 
   if (id) {
-    const student = await getStudentById(id);
-    if (!student) return;
-
     view.querySelector("#form-title").textContent = "Редактировать студента";
     view.querySelector("#student-id").value = student.id;
     view.querySelector("#fullName").value = student.fullName;
@@ -145,6 +156,7 @@ async function showForm(id) {
       return;
     }
 
+    history.replaceState({ view: "list" }, "", window.location.pathname);
     showList();
     await renderStudents();
   });
@@ -154,10 +166,31 @@ async function showDetails(id) {
   const student = await getStudentById(id);
   if (!student) return;
 
+  history.pushState({ view: "details", id }, "", `?details=${id}`);
   const view = await loadTemplate("student-details.html");
   const details = view.querySelector("#student-details");
 
   details.innerHTML = studentTableHtml(student);
+}
+
+async function handleHistoryBack() {
+  showList();
+
+  try {
+    await renderStudents();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function goBackToList() {
+  if (history.state?.view === "form" || history.state?.view === "details") {
+    history.back();
+    return;
+  }
+
+  showList();
+  await renderStudents();
 }
 
 async function removeStudent(id) {

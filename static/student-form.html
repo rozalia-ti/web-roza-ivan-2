@@ -1,5 +1,12 @@
 <section id="student-form-view">
-  <h2 id="form-title">Добавить студента</h2>
+  <div class="form-header">
+    <button type="button" class="back-button" data-action="back" aria-label="Назад к списку" title="Назад к списку">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </button>
+    <h2 id="form-title">Добавить студента</h2>
+  </div>
   <div id="student-preview"></div>
 
   <form id="student-form">
@@ -48,7 +55,9 @@
     </p>
 
     <p id="form-errors"></p>
-    <button type="submit">Сохранить</button>
-    <button type="button" data-action="back">Отмена</button>
+    <div class="student-form__actions">
+      <button type="submit">Сохранить</button>
+      <button type="button" data-action="back">Отмена</button>
+    </div>
   </form>
 </section>

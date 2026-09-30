@@ -6,17 +6,22 @@
 
     <title>Вторая лаба</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="style.css?v=6">
     <link rel="icon" href="favicon.png" type="image/png">
 </head>
 
 <body>
-    <main class="main">
-        <section class="students__header">
-            <h2>Список студентов</h2>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <h1>Список студентов</h1>
             <button type="button" class="button" data-action="add">Добавить студента</button>
-        </section>
+        </div>
+    </header>
 
+    <main class="main">
         <form id="filter-form" class="filter">
             <input type="text" id="filter-fullName" placeholder="ФИО">
             <input type="text" id="filter-group" placeholder="Группа">
@@ -49,6 +54,6 @@
             </table>
         </div>
     </main>
-    <script src="index.js"></script>
+    <script src="index.js?v=3"></script>
 </body>
 </html>
