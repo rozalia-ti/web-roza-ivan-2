@@ -114,7 +114,7 @@ async function showForm(id) {
     id ? `?edit=${id}` : "?add"
   );
 
-  const view = await loadTemplate("student-form.html?v=2");
+  const view = await loadTemplate("student-form.html");
   const form = view.querySelector("#student-form");
 
   if (id) {
@@ -294,7 +294,7 @@ async function deleteStudent(id) {
 }
 
 async function loadTemplate(fileName) {
-  const response = await fetch(fileName);
+  const response = await fetch(fileName, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Не удалось загрузить шаблон");
   }

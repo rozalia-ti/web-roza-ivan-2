@@ -19,10 +19,16 @@
   --control-padding: 5px;
   --header-padding: 16px;
   --main-padding: 16px;
+  --form-input-width: 350px;
+  --form-input-padding: 5px;
+  --form-input-border-color: var(--main-color);
+  --foreigner-padding: 4px;
+  --foreigner-font-size: 14px;
   --section-padding: 16px;
   --section-margin: 16px;
   --details-heading-gap: 15px;
   --details-table-gap: 10px;
+  --form-preview-gap: 5px;
   --back-icon-size: 24px;
   --gap: 8px;
   --gap-small: 4px;
@@ -123,10 +129,6 @@ tr:last-child td {
   border-bottom: none;
 }
 
-#student-details-view h2 {
-  margin-bottom: var(--details-heading-gap);
-}
-
 #student-details-view #student-details {
   margin-bottom: var(--details-table-gap);
 }
@@ -142,12 +144,18 @@ tr:last-child td {
   margin: 0;
 }
 
+#student-preview table {
+  margin-bottom: var(--form-preview-gap);
+}
+
 .back-button {
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--main-color);
   background: transparent;
+  border: none;
+  padding: var(--control-padding) 0;
 }
 
 .back-button svg {
@@ -159,6 +167,23 @@ tr:last-child td {
   display: flex;
   gap: var(--gap);
   margin-top: var(--details-table-gap);
+}
+
+#student-form input:not([type="checkbox"]):not([type="hidden"]),
+#student-form textarea {
+  width: var(--form-input-width);
+  max-width: 100%;
+  padding: var(--form-input-padding);
+  border: var(--border-width) solid var(--form-input-border-color);
+  border-radius: var(--border-radius);
+}
+
+.foreigner-field {
+  padding: var(--foreigner-padding);
+}
+
+.foreigner-field label {
+  font-size: var(--foreigner-font-size);
 }
 
 button {
